@@ -16,7 +16,7 @@
         android:background="#bfbfbf">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/welcome_user_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Welcome, user"
@@ -37,4 +37,12 @@
             android:layout_marginRight="4dp"
             android:text="Log Out" />
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/rat_pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@mipmap/rat"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
