@@ -25,7 +25,6 @@ public class Auth {
     private FirebaseAuth auth;
     private DatabaseReference db;
     private boolean success;
-    private boolean done;
     private MainActivity caller;
 
     private static Auth instance;
@@ -58,11 +57,13 @@ public class Auth {
 
     public void login(MainActivity callback, String email, String password) {
         caller = callback;
-        done = false;
         if (email.equals("") || password.equals("")) {
             errorMessage = "Please enter your email and password.";
             caller.loginCallback(false);
         }
+        
+        // this listener is an async call and we are not calling it from the controller class,
+        // hence the need for a callback
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -72,15 +73,12 @@ public class Auth {
                             Log.d("Register", "success");
                             currentUser = auth.getCurrentUser();
                             success = true;
-                            done = true;
                         } else {
                             Log.d("Register", task.getException().toString());
 
                             // refine this error message later
                             errorMessage = "User with that email and password was not found. Please try again or create an account.";
                             success = false;
-                            done = true;
-                            // JUST START THE INTENT FROM HERE ? ASYNCHRONOUSLY?
                         }
                         caller.loginCallback(success);
                     }
