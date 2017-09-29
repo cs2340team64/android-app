@@ -14,18 +14,21 @@ public class LoggedIn extends AppCompatActivity implements View.OnClickListener 
 
     TextView welcomeUser;
     Button logoutButton;
+    Auth auth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logged_in_screen);
 
+        auth = Auth.getInstance();
+
         welcomeUser = (TextView) findViewById(R.id.welcome_user_text);
         logoutButton = (Button) findViewById(R.id.logout_button);
 
         logoutButton.setOnClickListener(this);
 
-        welcomeUser.setText("Welcome, " + Auth.getCurrentUsername());
+        welcomeUser.setText(auth.getCurrentUserEmail());
     }
 
     @Override

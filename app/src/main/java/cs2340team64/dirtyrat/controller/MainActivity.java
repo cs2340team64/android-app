@@ -1,12 +1,18 @@
 package cs2340team64.dirtyrat.controller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.firebase.auth.AuthResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,11 +32,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button registerButton;
     TextView description;
     TextView cancel;
-    TextView success;
+    TextView successText;
     TextView error;
-    EditText username;
+    EditText email;
     EditText password;
     EditText confirmPassword;
+    Spinner userTypeSpinner;
+
+    Auth auth;
 
     List<? extends View> welcomeWidgets;
     List<? extends View> loginWidgets;
@@ -50,12 +59,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         loginButton = (Button) findViewById(R.id.login_button);
         registerButton = (Button) findViewById(R.id.register_button);
         description = (TextView) findViewById(R.id.app_description);
-        success = (TextView) findViewById(R.id.account_creation_success);
+        successText = (TextView) findViewById(R.id.account_creation_success);
         error = (TextView) findViewById(R.id.error_message);
         cancel = (TextView) findViewById(R.id.cancel_link);
-        username = (EditText) findViewById(R.id.login_username);
+        email = (EditText) findViewById(R.id.login_email);
         password = (EditText) findViewById(R.id.login_password);
         confirmPassword = (EditText) findViewById(R.id.confirm_password);
+        userTypeSpinner = (Spinner) findViewById(R.id.user_type_spinner);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, new String[]{"User", "Admin"});
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userTypeSpinner.setAdapter(adapter);
 
         // Set click event listeners
         goToLoginButton.setOnClickListener(this);
@@ -68,9 +83,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // welcomeWidgets is the first screen you see when you open the app, loginWidgets is the
         // login screen, and registrationWidgets is the registration screen
         welcomeWidgets = Arrays.asList(goToLoginButton, goToRegistrationButton, description);
-        loginWidgets = Arrays.asList(loginButton, cancel, username, password);
-        registrationWidgets = Arrays.asList(registerButton, cancel, username, password, confirmPassword);
-        messages = Arrays.asList(success, error);
+        loginWidgets = Arrays.asList(loginButton, cancel, email, password);
+        registrationWidgets = Arrays.asList(registerButton, cancel, email, password, confirmPassword, userTypeSpinner);
+        messages = Arrays.asList(successText, error);
+
+
+        auth = Auth.getInstance();
 
         // Set starting state to the welcome screen
         changeState(ViewState.WELCOME);
@@ -83,13 +101,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 changeState(ViewState.LOGIN);
                 break;
             case R.id.login_button:
-                login(username.getText().toString(), password.getText().toString());
+                login(email.getText().toString(), password.getText().toString());
                 break;
             case R.id.goto_register_button:
                 changeState(ViewState.REGISTER);
                 break;
             case R.id.register_button:
-                register(username.getText().toString(), password.getText().toString(), confirmPassword.getText().toString());
+                register(email.getText().toString(), password.getText().toString(), confirmPassword.getText().toString());
                 break;
             case R.id.cancel_link:
                 clearInput();
@@ -120,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void clearInput() {
-        username.setText("");
+        email.setText("");
         password.setText("");
         confirmPassword.setText("");
     }
@@ -129,10 +147,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (TextView text : messages) text.setText("");
     }
 
-    private void login(String username, String password) {
-        boolean status = Auth.login(username, password);
-        if (!status) {
-            error.setText(Auth.getError());
+    private void login(String email, String password) {
+        auth.login(this, email, password);
+    }
+    public void loginCallback(boolean success) {
+        if (!success) {
+            error.setText(auth.getError());
             clearInput();
         } else {
             Intent loggedIn = new Intent(this, LoggedIn.class);
@@ -140,14 +160,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void register(String username, String password, String confirmPassword) {
-        boolean status = Auth.register(username, password, confirmPassword);
-        if (!status) {
-            error.setText(Auth.getError());
+    private void register(String email, String password, String confirmPassword) {
+        auth.register(this, email, password, confirmPassword, userTypeSpinner.getSelectedItem().equals("Admin"));
+    }
+    public void registerCallback(boolean success) {
+        Log.d("Register", "Auth done");
+        if (!success) {
+            error.setText(auth.getError());
             clearInput();
         } else {
             changeState(ViewState.WELCOME);
-            success.setText("Successfully created account: \"" + username + "\"!");
+            successText.setText("Successfully created account!");
             clearInput();
         }
     }
