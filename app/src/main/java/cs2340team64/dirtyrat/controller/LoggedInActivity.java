@@ -15,6 +15,7 @@ public class LoggedInActivity extends AppCompatActivity implements View.OnClickL
     TextView welcomeUser;
     Button logoutButton;
     Button gotoListView;
+    Button gotoCreateView;
     Auth auth;
 
     @Override
@@ -27,9 +28,11 @@ public class LoggedInActivity extends AppCompatActivity implements View.OnClickL
         welcomeUser = (TextView) findViewById(R.id.welcome_user_text);
         logoutButton = (Button) findViewById(R.id.logout_button);
         gotoListView = (Button) findViewById(R.id.goto_listview);
+        gotoCreateView = (Button) findViewById(R.id.goto_create_view);
 
         logoutButton.setOnClickListener(this);
         gotoListView.setOnClickListener(this);
+        gotoCreateView.setOnClickListener(this);
 
         welcomeUser.setText(auth.getCurrentUserEmail());
     }
@@ -40,6 +43,8 @@ public class LoggedInActivity extends AppCompatActivity implements View.OnClickL
             logout();
         } else if (view.getId() == R.id.goto_listview) {
             startActivity(new Intent(this, ReportListActivity.class));
+        } else if (view.getId() == R.id.goto_create_view) {
+            startActivity(new Intent(this, ReportCreateActivity.class));
         }
     }
 

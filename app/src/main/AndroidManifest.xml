@@ -28,6 +28,10 @@
         <activity android:name=".controller.ReportDetailActivity">
 
         </activity>
+
+        <activity android:name=".controller.ReportCreateActivity">
+
+        </activity>
     </application>
 
 </manifest>

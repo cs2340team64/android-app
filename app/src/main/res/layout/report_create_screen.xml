@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/city_input"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="72dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="City?" />
+
+    <Button
+        android:id="@+id/report_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="69dp"
+        android:text="Add"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/city_input"
+        android:layout_alignStart="@+id/city_input" />
+
+    <Button
+        android:id="@+id/report_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_alignTop="@+id/report_add_button"
+        android:layout_alignRight="@+id/city_input"
+        android:layout_alignEnd="@+id/city_input" />
+</RelativeLayout>
