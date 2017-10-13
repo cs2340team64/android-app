@@ -10,10 +10,11 @@ import android.widget.TextView;
 import cs2340team64.dirtyrat.R;
 import cs2340team64.dirtyrat.model.Auth;
 
-public class LoggedIn extends AppCompatActivity implements View.OnClickListener {
+public class LoggedInActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView welcomeUser;
     Button logoutButton;
+    Button gotoListView;
     Auth auth;
 
     @Override
@@ -25,15 +26,21 @@ public class LoggedIn extends AppCompatActivity implements View.OnClickListener 
 
         welcomeUser = (TextView) findViewById(R.id.welcome_user_text);
         logoutButton = (Button) findViewById(R.id.logout_button);
+        gotoListView = (Button) findViewById(R.id.goto_listview);
 
         logoutButton.setOnClickListener(this);
+        gotoListView.setOnClickListener(this);
 
         welcomeUser.setText(auth.getCurrentUserEmail());
     }
 
     @Override
     public void onClick(View view) {
-        logout();
+        if (view.getId() == R.id.logout_button) {
+            logout();
+        } else if (view.getId() == R.id.goto_listview) {
+            startActivity(new Intent(this, ReportListActivity.class));
+        }
     }
 
     public void logout() {

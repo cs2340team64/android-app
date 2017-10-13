@@ -16,7 +16,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.LoggedIn">
+
+        <activity android:name=".controller.LoggedInActivity">
+
+        </activity>
+
+        <activity android:name=".controller.ReportListActivity">
+
+        </activity>
+
+        <activity android:name=".controller.ReportDetailActivity">
 
         </activity>
     </application>

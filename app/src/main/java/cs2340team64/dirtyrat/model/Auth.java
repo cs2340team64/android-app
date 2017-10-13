@@ -61,7 +61,7 @@ public class Auth {
             errorMessage = "Please enter your email and password.";
             caller.loginCallback(false);
         }
-        
+
         // this listener is an async call and we are not calling it from the controller class,
         // hence the need for a callback
         auth.signInWithEmailAndPassword(email, password)
@@ -103,7 +103,6 @@ public class Auth {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("Register", "successfully created account");
-
                             db.child("admins").child(auth.getCurrentUser().getUid()).setValue(admin);
                             success = true;
                         } else {

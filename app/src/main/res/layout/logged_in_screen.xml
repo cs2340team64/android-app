@@ -45,4 +45,13 @@
         app:srcCompat="@mipmap/rat"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/goto_listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Rat Report List"
+        android:layout_below="@+id/welcome_user_bar"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

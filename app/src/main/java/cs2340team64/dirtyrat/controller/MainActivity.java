@@ -1,6 +1,5 @@
 package cs2340team64.dirtyrat.controller;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,13 +11,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import cs2340team64.dirtyrat.R;
 import cs2340team64.dirtyrat.model.Auth;
+import cs2340team64.dirtyrat.model.Report;
+import cs2340team64.dirtyrat.model.ReportList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText confirmPassword;
     Spinner userTypeSpinner;
 
+    DatabaseReference db;
     Auth auth;
 
     List<? extends View> welcomeWidgets;
@@ -92,6 +99,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Set starting state to the welcome screen
         changeState(ViewState.WELCOME);
+
+        // The following block pulls the list of reports from Firebase
+        db = FirebaseDatabase.getInstance().getReference().child("Reports");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Report report = snapshot.getValue(Report.class);
+                    ReportList.reports.add(report);
+                }
+                Collections.sort(ReportList.reports);
+                for (Report r : ReportList.reports) {
+                    System.out.println(r.getUnique_Key());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -155,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             error.setText(auth.getError());
             clearInput();
         } else {
-            Intent loggedIn = new Intent(this, LoggedIn.class);
+            Intent loggedIn = new Intent(this, LoggedInActivity.class);
             startActivity(loggedIn);
         }
     }

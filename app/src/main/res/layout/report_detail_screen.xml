@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_detail_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="32sp"
+        android:text="Report  Details:"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_alignStart="@+id/text_report_number" />
+
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_report_number"
+        android:layout_marginTop="14dp"
+        android:text="Time of Incident:" />
+
+    <TextView
+        android:id="@+id/text_report_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/text_detail_header"
+        android:layout_marginLeft="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="27dp"
+        android:text="Report Number:" />
+
+    <TextView
+        android:id="@+id/field_report_number"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_report_number"
+        android:layout_alignBottom="@+id/text_report_number"
+        android:layout_alignParentRight="@+id/field_date"
+        android:layout_alignStart="@+id/text_report_number"
+        android:layout_marginStart="130dp"/>
+
+    <TextView
+        android:id="@+id/field_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_date"
+        android:layout_alignStart="@id/field_report_number" />
+
+    <TextView
+        android:id="@+id/text_location_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_date"
+        android:layout_marginTop="14dp"
+        android:text="Location Type:" />
+
+    <TextView
+        android:id="@+id/field_location_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_location_type"
+        android:layout_alignStart="@id/field_report_number"
+        android:layout_toRightOf="@+id/text_detail_header"
+        android:layout_toEndOf="@+id/text_detail_header" />
+
+    <TextView
+        android:id="@+id/text_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_location_type"
+        android:layout_marginTop="14dp"
+        android:text="Address:" />
+
+    <TextView
+        android:id="@+id/field_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_address"
+        android:layout_toRightOf="@+id/text_detail_header"
+        android:layout_alignStart="@id/field_report_number"
+        android:layout_toEndOf="@+id/text_detail_header" />
+
+    <TextView
+        android:id="@+id/text_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_address"
+        android:layout_marginTop="14dp"
+        android:text="City:" />
+
+    <TextView
+        android:id="@+id/field_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_city"
+        android:layout_alignStart="@id/field_report_number"
+        android:layout_toEndOf="@+id/text_detail_header" />
+
+    <TextView
+        android:id="@+id/text_borough"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_city"
+        android:layout_marginTop="14dp"
+        android:text="Borough:" />
+
+    <TextView
+        android:id="@+id/field_borough"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_borough"
+        android:layout_alignStart="@id/field_report_number"
+        android:layout_toRightOf="@+id/text_detail_header"
+        android:layout_toEndOf="@+id/text_detail_header" />
+
+    <TextView
+        android:id="@+id/text_zip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_borough"
+        android:layout_marginTop="14dp"
+        android:text="Zip Code:" />
+
+    <TextView
+        android:id="@+id/field_zip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_zip"
+        android:layout_toRightOf="@+id/text_detail_header"
+        android:layout_alignStart="@id/field_report_number"
+        android:layout_toEndOf="@+id/text_detail_header" />
+
+    <TextView
+        android:id="@+id/text_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_zip"
+        android:layout_marginTop="14dp"
+        android:text="Latitude:" />
+
+    <TextView
+        android:id="@+id/field_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_lat"
+        android:layout_toRightOf="@+id/text_detail_header"
+        android:layout_alignStart="@id/field_report_number"
+        android:layout_toEndOf="@+id/text_detail_header" />
+
+    <TextView
+        android:id="@+id/text_lon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_report_number"
+        android:layout_below="@+id/text_lat"
+        android:layout_marginTop="14dp"
+        android:text="Longitude:" />
+
+    <TextView
+        android:id="@+id/field_lon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/text_lon"
+        android:layout_toRightOf="@+id/text_detail_header"
+        android:layout_alignStart="@id/field_report_number"
+        android:layout_toEndOf="@+id/text_detail_header" />
+
+</RelativeLayout>
