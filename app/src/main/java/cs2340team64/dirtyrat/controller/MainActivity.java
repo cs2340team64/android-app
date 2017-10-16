@@ -108,22 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Report report = snapshot.getValue(Report.class);
-                    ReportList.reports.add(report);
-                }
-                // now sorting in descending order
-                Collections.sort(ReportList.reports, new Comparator<Report>() {
-                    @Override
-                    public int compare(Report rep1, Report rep2) {
-                        return -rep1.compareTo(rep2);
-                    }
-                });
-                ReportList.setLatestUniqueKey(ReportList.reports.get(0).getUnique_Key());
-//                for (Report r : ReportList.reports) {
-//                    System.out.println(r.getUnique_Key());
-//                }
-
+                ReportList.updateFromDataSnapshot(dataSnapshot);
             }
 
             @Override
@@ -138,19 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db_new.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Report report = snapshot.getValue(Report.class);
-                    ReportList.reports.add(report);
-                }
-                Collections.sort(ReportList.reports, new Comparator<Report>() {
-                    @Override
-                    public int compare(Report rep1, Report rep2) {
-                        return -rep1.compareTo(rep2);
-                    }
-                });
-                if (ReportList.reports.size() > 0) {
-                    ReportList.setLatestUniqueKey(ReportList.reports.get(0).getUnique_Key());
-                }
+                ReportList.updateFromDataSnapshot(dataSnapshot);
             }
 
             @Override
