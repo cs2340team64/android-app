@@ -35,8 +35,7 @@ public class ReportCreateActivity extends Activity {
 
     private EditText city;
 
-    private Button reportAddButton;
-    private Button reportCancelButton;
+    DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +44,8 @@ public class ReportCreateActivity extends Activity {
 
         city = (EditText) findViewById(R.id.city_input);
 
-        reportAddButton = (Button) findViewById(R.id.report_add_button);
-        reportCancelButton = (Button) findViewById(R.id.report_cancel_button);
+        Button reportAddButton = (Button) findViewById(R.id.report_add_button);
+        Button reportCancelButton = (Button) findViewById(R.id.report_cancel_button);
 
         reportAddButton.setOnClickListener(reportCreateListner);
         reportCancelButton.setOnClickListener(reportCreateListner);
@@ -58,9 +57,18 @@ public class ReportCreateActivity extends Activity {
                 Report rep = new Report();
                 String city_str = city.getText().toString();
                 rep.setCity(city_str);
+                rep.setBorough("Manhattan");
+                rep.setCreated_Date("somedate");
+                rep.setIncident_Address("123 dirty st.");
+                rep.setIncident_Zip("10001");
+                rep.setLatitude(23.33);
+                rep.setLocation_Type("type");
+                rep.setLongitude(35.98);
+                rep.setUnique_Key(ReportList.generateNextUniqueKey());
 
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                mDatabase.push().setValue(city_str);
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("Reports_new");
+                mDatabase.push().setValue(rep);
+                finish();
 
             } else if (v.getId() == R.id.report_cancel_button) {
                 finish();

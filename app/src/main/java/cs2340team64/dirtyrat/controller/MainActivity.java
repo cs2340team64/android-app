@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.common.data.DataBufferObserverSet;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cs2340team64.dirtyrat.R;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Spinner userTypeSpinner;
 
     DatabaseReference db;
+    DatabaseReference db_new;
     Auth auth;
 
     List<? extends View> welcomeWidgets;
@@ -109,10 +112,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Report report = snapshot.getValue(Report.class);
                     ReportList.reports.add(report);
                 }
-                Collections.sort(ReportList.reports);
-                for (Report r : ReportList.reports) {
-                    System.out.println(r.getUnique_Key());
-                }
+                // now sorting in descending order
+                Collections.sort(ReportList.reports, new Comparator<Report>() {
+                    @Override
+                    public int compare(Report rep1, Report rep2) {
+                        return -rep1.compareTo(rep2);
+                    }
+                });
+                ReportList.setLatestUniqueKey(ReportList.reports.get(0).getUnique_Key());
+//                for (Report r : ReportList.reports) {
+//                    System.out.println(r.getUnique_Key());
+//                }
 
             }
 
@@ -121,6 +131,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+        // For now using a separate database key ("Reports_new") to store user-created entires
+        //      just to be safe
+        db_new = FirebaseDatabase.getInstance().getReference().child("Reports_new");
+        db_new.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Report report = snapshot.getValue(Report.class);
+                    ReportList.reports.add(report);
+                }
+                Collections.sort(ReportList.reports, new Comparator<Report>() {
+                    @Override
+                    public int compare(Report rep1, Report rep2) {
+                        return -rep1.compareTo(rep2);
+                    }
+                });
+                if (ReportList.reports.size() > 0) {
+                    ReportList.setLatestUniqueKey(ReportList.reports.get(0).getUnique_Key());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
     }
 

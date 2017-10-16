@@ -12,6 +12,8 @@ public class ReportList {
 
     private static Report currentReport;
 
+    private static long latestUniqueKey;
+
     public static void setCurrentReport(Report report) {
         currentReport = report;
     }
@@ -20,4 +22,9 @@ public class ReportList {
         return currentReport;
     }
 
+    public static void setLatestUniqueKey(long uk) { latestUniqueKey = uk; }
+
+    public static long getLatestUniqueKey() { return latestUniqueKey; }
+
+    public static long generateNextUniqueKey() { return latestUniqueKey + 10; }
 }
