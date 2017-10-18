@@ -1,6 +1,8 @@
 package cs2340team64.dirtyrat.model;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by diogo on 10/12/2017.
@@ -16,6 +18,16 @@ public class Report implements Comparable<Report> {
     private String Incident_Zip;
     private String Location_Type;
     private String Created_Date;
+
+    public static List<String> allPropertyTypes = Arrays.asList(
+            "Vacant Lot",
+            "Commercial Building",
+            "1-2 Family Dwelling",
+            "3+ Family Apt. BUilding",
+            "3+ Family Mixed Use Building",
+            "Catch Basin/Sewer",
+            "Other (Explain Below)"
+    );
 
     @Override
     public int compareTo(Report other) {

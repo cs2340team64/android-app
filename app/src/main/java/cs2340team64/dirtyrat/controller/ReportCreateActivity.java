@@ -6,22 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cs2340team64.dirtyrat.R;
 import cs2340team64.dirtyrat.model.Report;
@@ -33,7 +27,13 @@ import cs2340team64.dirtyrat.model.ReportList;
 
 public class ReportCreateActivity extends Activity {
 
-    private EditText city;
+    private EditText cityInput;
+    private EditText boroughInput;
+    private EditText addressInput;
+    private EditText zipcodeInput;
+    private Spinner propertyTypeInput;
+    private EditText dateInput;
+    private EditText timeInput;
 
     DatabaseReference mDatabase;
 
@@ -42,7 +42,24 @@ public class ReportCreateActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_create_screen);
 
-        city = (EditText) findViewById(R.id.city_input);
+        cityInput = (EditText) findViewById(R.id.create_input_city);
+        boroughInput = (EditText) findViewById(R.id.create_input_borough);
+        addressInput = (EditText) findViewById(R.id.create_input_address);
+        zipcodeInput = (EditText) findViewById(R.id.create_input_zipcode);
+        propertyTypeInput = (Spinner)  findViewById(R.id.create_input_propertyType);
+        dateInput = (EditText) findViewById(R.id.create_input_date);
+        timeInput = (EditText) findViewById(R.id.create_input_time);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,
+                Report.allPropertyTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        propertyTypeInput.setAdapter(adapter);
+
+        // populate the date/time fileds with current date/time
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ssaaa");
+        String[] currentDateTimeStrings = sdf.format(new Date()).split(" ");
+        dateInput.setText(currentDateTimeStrings[0]);
+        timeInput.setText(currentDateTimeStrings[1]);
 
         Button reportAddButton = (Button) findViewById(R.id.report_add_button);
         Button reportCancelButton = (Button) findViewById(R.id.report_cancel_button);
@@ -54,18 +71,26 @@ public class ReportCreateActivity extends Activity {
     private View.OnClickListener reportCreateListner = new View.OnClickListener() {
         public void onClick(View v) {
             if (v.getId() == R.id.report_add_button) {
+
+                // create new Report object
                 Report rep = new Report();
-                String city_str = city.getText().toString();
-                rep.setCity(city_str);
-                rep.setBorough("Manhattan");
-                rep.setCreated_Date("somedate");
-                rep.setIncident_Address("123 dirty st.");
-                rep.setIncident_Zip("10001");
-                rep.setLatitude(23.33);
-                rep.setLocation_Type("type");
-                rep.setLongitude(35.98);
+                rep.setCity(cityInput.getText().toString());
+                rep.setBorough(boroughInput.getText().toString());
+                String dateText = dateInput.getText().toString();
+                String timeText = timeInput.getText().toString();
+                rep.setCreated_Date(dateText + " "
+                        + timeText.substring(0, timeText.length() - 2) + " "
+                        + timeText.substring(timeText.length() - 2));
+                rep.setIncident_Address(addressInput.getText().toString());
+                rep.setIncident_Zip(zipcodeInput.getText().toString());
+                rep.setLocation_Type(propertyTypeInput.getSelectedItem().toString());
+
+                // hard code the coordinates for now
+                rep.setLatitude(40.7831);
+                rep.setLongitude(73.9712);
                 rep.setUnique_Key(ReportList.generateNextUniqueKey());
 
+                // push to database
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("Reports_new");
                 mDatabase.push().setValue(rep);
                 finish();
