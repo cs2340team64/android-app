@@ -1,12 +1,13 @@
 package cs2340team64.dirtyrat.model;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 /**
  * Created by diogo on 10/12/2017.
  */
 
-public class Report implements Comparable<Report> {
+public class Report implements Comparable<Report>, Serializable {
     private long Unique_Key;
     private double Latitude;
     private double Longitude;
@@ -20,7 +21,18 @@ public class Report implements Comparable<Report> {
     @Override
     public int compareTo(Report other) {
         // temporary: later should probably group by distance from the user
-        return (int) (this.Unique_Key - other.getUnique_Key());
+        return (int) (other.getUnique_Key() - this.Unique_Key);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        } else if (!(o instanceof Report)) {
+            return false;
+        } else {
+            return ((Report) o).getUnique_Key() == Unique_Key;
+        }
     }
 
     public Report() {

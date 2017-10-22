@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import cs2340team64.dirtyrat.R;
 import cs2340team64.dirtyrat.model.Report;
-import cs2340team64.dirtyrat.model.ReportList;
+import cs2340team64.dirtyrat.model.ReportListWrapper;
 
 /**
  * Created by diogo on 10/12/2017.
@@ -17,6 +17,10 @@ public class ReportDetailActivity extends Activity {
 
     TextView key, date, type, zip, address, city, borough, lat, lon;
 
+    /**
+     * activity startup code
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +36,7 @@ public class ReportDetailActivity extends Activity {
         lat = (TextView) findViewById(R.id.field_lat);
         lon = (TextView) findViewById(R.id.field_lon);
 
-        Report report = ReportList.getCurrentReport();
+        Report report = ReportListWrapper.getInstance().getCurrentReport();
 
         key.setText("" + report.getUnique_Key());
         date.setText(report.getCreated_Date());

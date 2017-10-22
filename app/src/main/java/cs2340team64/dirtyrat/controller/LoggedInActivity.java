@@ -17,6 +17,10 @@ public class LoggedInActivity extends AppCompatActivity implements View.OnClickL
     Button gotoListView;
     Auth auth;
 
+    /**
+     * activity startup
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,10 @@ public class LoggedInActivity extends AppCompatActivity implements View.OnClickL
         welcomeUser.setText(auth.getCurrentUserEmail());
     }
 
+    /**
+     * Universal click listener for this activity
+     * @param view the view that was clicked on
+     */
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.logout_button) {
@@ -43,6 +51,9 @@ public class LoggedInActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * logs out and returns to the welcome screen
+     */
     public void logout() {
         Intent logout = new Intent(this, MainActivity.class);
         startActivity(logout);

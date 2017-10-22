@@ -1,6 +1,9 @@
 package cs2340team64.dirtyrat.controller;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,20 +20,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import cs2340team64.dirtyrat.R;
 import cs2340team64.dirtyrat.model.Auth;
 import cs2340team64.dirtyrat.model.Report;
-import cs2340team64.dirtyrat.model.ReportList;
+import cs2340team64.dirtyrat.model.ReportListWrapper;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private enum ViewState {
         WELCOME, LOGIN, REGISTER;
     }
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     Button goToLoginButton;
     Button loginButton;
@@ -45,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText confirmPassword;
     Spinner userTypeSpinner;
 
+    ReportListWrapper reportListWrapper;
+    ArrayList<Report> reportList;
     DatabaseReference db;
     Auth auth;
 
@@ -54,11 +66,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<TextView> messages;
 
 
-
+    /**
+     * acitivity startup
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_screen);
+
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
 
         // Link all the widgets to the UI
         goToLoginButton = (Button) findViewById(R.id.goto_login_button);
@@ -102,18 +129,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // The following block pulls the list of reports from Firebase
         db = FirebaseDatabase.getInstance().getReference().child("Reports");
+
+        reportListWrapper = ReportListWrapper.getInstance();
+        //debug
+        try {
+            Log.d("Persistence", "" + reportListWrapper.getList().size());
+        } catch (NullPointerException e) {
+            Log.d("Persistence", "NPE");
+            e.printStackTrace();
+        }
+
+        reportList = reportListWrapper.getList();
+
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Report report = snapshot.getValue(Report.class);
-                    ReportList.reports.add(report);
+                if (dataSnapshot.getChildrenCount() != reportList.size()) {
+                    Log.d("Persistence", "DataSnapshot size - local data size = " + (dataSnapshot.getChildrenCount() - reportList.size()));
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Report report = snapshot.getValue(Report.class);
+                        if ((reportList.size() > 0 && report.getUnique_Key() > reportList.get(0).getUnique_Key())){
+                            reportListWrapper.add(report);
+                            Log.d("Firebase", "Grabbing report id#" + report.getUnique_Key() + " from Firebase");
+                        } else if ((reportList.size() == 0 || !reportList.contains(report))) {
+                            reportListWrapper.add(report);
+                            Log.d("Firebase", "Grabbing report id#" + report.getUnique_Key() + " from Firebase");
+                        }
+                    }
+                    Log.d("Persistence", "current ReportList size: " + reportListWrapper.getList().size());
+                    reportListWrapper.sort();
+                    Log.d("Persistence", "ReportList sorted");
+                    // worker thread to save the list
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            reportListWrapper.saveReportList();
+                        }
+                    }.start();
                 }
-                Collections.sort(ReportList.reports);
-                for (Report r : ReportList.reports) {
-                    System.out.println(r.getUnique_Key());
-                }
-
             }
 
             @Override
@@ -124,6 +177,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    /**
+     * Universal click listener for this activity
+     * @param view the view that is clicked on
+     */
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -146,6 +203,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Changes the layout state between the welcoem screen, login screen, and register screen
+     * @param state the state to transition to
+     */
     private void changeState(ViewState state) {
         clearMessages();
         switch (state) {
@@ -167,19 +228,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * clears the email/password fields
+     */
     private void clearInput() {
         email.setText("");
         password.setText("");
         confirmPassword.setText("");
     }
 
+    /**
+     * clears TextView messages
+     */
     private void clearMessages() {
         for (TextView text : messages) text.setText("");
     }
 
+    /**
+     * wrapper for the auth login method
+     * @param email login email
+     * @param password login password
+     */
     private void login(String email, String password) {
         auth.login(this, email, password);
     }
+
+    /**
+     * callback for the auth.login method
+     * @param success true if login was successful
+     */
     public void loginCallback(boolean success) {
         if (!success) {
             error.setText(auth.getError());
@@ -190,9 +267,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * wrapper for the auth.register method
+     * @param email registration email
+     * @param password registraition password
+     * @param confirmPassword registration password
+     */
     private void register(String email, String password, String confirmPassword) {
         auth.register(this, email, password, confirmPassword, userTypeSpinner.getSelectedItem().equals("Admin"));
     }
+
+    /**
+     * callback for the async auth.register method
+     * @param success true if registration was successful
+     */
     public void registerCallback(boolean success) {
         Log.d("Register", "Auth done");
         if (!success) {
