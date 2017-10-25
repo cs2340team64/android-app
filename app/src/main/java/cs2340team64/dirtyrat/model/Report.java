@@ -2,6 +2,8 @@ package cs2340team64.dirtyrat.model;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by diogo on 10/12/2017.
@@ -18,26 +20,49 @@ public class Report implements Comparable<Report>, Serializable {
     private String Location_Type;
     private String Created_Date;
 
+    public static List<String> allPropertyTypes = Arrays.asList(
+            "Vacant Lot",
+            "Commercial Building",
+            "1-2 Family Dwelling",
+            "3+ Family Apt. Building",
+            "3+ Family Mixed Use Building",
+            "Catch Basin/Sewer",
+            "Other (Explain Below)"
+    );
+
+    /**
+     * Comparable override, sorts (descending) by date then unique key
+     * @param other the report to compare this to
+     * @return int representing the comparison
+     */
     @Override
     public int compareTo(Report other) {
         // temporary: later should probably group by distance from the user
         return (int) (other.getUnique_Key() - this.Unique_Key);
     }
 
+    /**
+     * Equals override
+     * @param other object to compare
+     * @return true if objects are equal (ie. have the same key)
+     */
     @Override
-    public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        } else if (!(o instanceof Report)) {
-            return false;
-        } else {
-            return ((Report) o).getUnique_Key() == Unique_Key;
-        }
+    public boolean equals(Object other) {
+        return other != null && other instanceof Report && ((Report) other).getUnique_Key() == Unique_Key;
     }
 
-    public Report() {
+    /**
+     * toString override
+     * @return String representation with the report's key
+     */
+    @Override
+    public String toString() {
+        return "Rat Sighting Report #" + Unique_Key;
     }
 
+    /**
+     * --- GETTERS AND SETTERS ---
+     */
     public long getUnique_Key() {
         return Unique_Key;
     }
@@ -110,9 +135,5 @@ public class Report implements Comparable<Report>, Serializable {
         Created_Date = created_Date;
     }
 
-    @Override
-    public String toString() {
-        return "Rat Sighting Report #" + Unique_Key;
-    }
 }
 

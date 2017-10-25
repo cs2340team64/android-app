@@ -43,15 +43,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@mipmap/rat"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/welcome_user_bar" />
 
     <Button
         android:id="@+id/goto_listview"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/goto_mapview"
+        android:layout_alignBottom="@+id/goto_mapview"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:text="rat list"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/goto_mapview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/welcome_user_bar"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="11dp"
+        android:layout_toRightOf="@id/goto_listview"
+        android:text="rat map"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/goto_create_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Rat Report List"
-        android:layout_below="@+id/welcome_user_bar"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/goto_listview"
+        android:layout_marginTop="2dp"
+        android:text="create a new report"
+        android:layout_alignLeft="@+id/goto_listview"
+        android:layout_alignStart="@+id/goto_listview"
+        android:layout_alignRight="@+id/goto_mapview"
+        android:layout_alignEnd="@+id/goto_mapview" />
+
 </RelativeLayout>

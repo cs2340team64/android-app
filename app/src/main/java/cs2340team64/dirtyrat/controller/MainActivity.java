@@ -14,10 +14,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -58,7 +60,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ReportListWrapper reportListWrapper;
     ArrayList<Report> reportList;
     DatabaseReference db;
+    DatabaseReference db_new;
     Auth auth;
+
+    long lastFetch;
 
     List<? extends View> welcomeWidgets;
     List<? extends View> loginWidgets;
@@ -131,47 +136,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = FirebaseDatabase.getInstance().getReference().child("Reports");
 
         reportListWrapper = ReportListWrapper.getInstance();
-        //debug
-        try {
-            Log.d("Persistence", "" + reportListWrapper.getList().size());
-        } catch (NullPointerException e) {
-            Log.d("Persistence", "NPE");
-            e.printStackTrace();
-        }
 
-        reportList = reportListWrapper.getList();
+        lastFetch = 0;
 
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() != reportList.size()) {
-                    Log.d("Persistence", "DataSnapshot size - local data size = " + (dataSnapshot.getChildrenCount() - reportList.size()));
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Report report = snapshot.getValue(Report.class);
-                        if ((reportList.size() > 0 && report.getUnique_Key() > reportList.get(0).getUnique_Key())){
-                            reportListWrapper.add(report);
-                            Log.d("Firebase", "Grabbing report id#" + report.getUnique_Key() + " from Firebase");
-                        } else if ((reportList.size() == 0 || !reportList.contains(report))) {
-                            reportListWrapper.add(report);
-                            Log.d("Firebase", "Grabbing report id#" + report.getUnique_Key() + " from Firebase");
-                        }
-                    }
-                    Log.d("Persistence", "current ReportList size: " + reportListWrapper.getList().size());
-                    reportListWrapper.sort();
-                    Log.d("Persistence", "ReportList sorted");
-                    // worker thread to save the list
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            reportListWrapper.saveReportList();
-                        }
-                    }.start();
+        //Query query = db.limitToFirst(50);
+        //query.addChildEventListener(new ChildEventListener() {
+        db.addChildEventListener(new ChildEventListener() {
+        @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Report report = dataSnapshot.getValue(Report.class);
+                reportListWrapper.add(report);
+                long currentTime = System.currentTimeMillis();
+                if ((currentTime - lastFetch) > 100) {
+                    Log.d("Firebase", "Grabbing report id#" + report.getUnique_Key() + " from Firebase");
+                    lastFetch = currentTime;
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // ignore for now
+            }
 
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // ignore for now
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                // ignore for now
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("Firebase", databaseError.getMessage());
+                Log.d("Firebase", databaseError.getDetails());
             }
         });
 
@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 changeState(ViewState.LOGIN);
                 break;
             case R.id.login_button:
+                //reportListWrapper.printKeys();
                 login(email.getText().toString(), password.getText().toString());
                 break;
             case R.id.goto_register_button:
@@ -250,6 +251,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @param password login password
      */
     private void login(String email, String password) {
+        if (email == null || email.equals("") || password == null || password.equals("")) {
+            return;
+        }
         auth.login(this, email, password);
     }
 

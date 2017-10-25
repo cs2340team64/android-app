@@ -23,7 +23,7 @@ public class ReportListActivity extends Activity {
     ReportListWrapper reportListWrapper = ReportListWrapper.getInstance();
 
     /**
-     * activity init
+     * activity startup code
      * @param savedInstanceState
      */
     @Override
@@ -32,7 +32,8 @@ public class ReportListActivity extends Activity {
         setContentView(R.layout.report_list_screen);
 
         listView = (ListView) findViewById(R.id.list);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reportListWrapper.getList());
+        //adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reportListWrapper.getReports());
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reportListWrapper.filter(-20171022000000L, -20171023000000L));
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

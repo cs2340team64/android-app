@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/report_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
+        android:text="Add"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/report_cancel_button"
+        android:layout_toStartOf="@+id/report_cancel_button" />
+
+    <Button
+        android:id="@+id/report_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_marginRight="91dp"
+        android:layout_marginEnd="91dp"
+        android:layout_alignBaseline="@+id/report_add_button"
+        android:layout_alignBottom="@+id/report_add_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView9"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView9"
+        android:layout_marginTop="22dp"
+        android:text="City"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+    <EditText
+        android:id="@+id/create_input_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView8"
+        android:layout_alignBottom="@+id/textView8"
+        android:layout_alignLeft="@+id/report_add_button"
+        android:layout_alignStart="@+id/report_add_button"
+        android:layout_marginLeft="23dp"
+        android:layout_marginStart="23dp"
+        android:ems="10"
+        android:hint="New York"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView10"
+        android:layout_below="@+id/create_input_city"
+        android:layout_marginTop="20dp"
+        android:text="Borough"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+    <EditText
+        android:id="@+id/create_input_borough"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/create_input_city"
+        android:layout_alignStart="@+id/create_input_city"
+        android:layout_alignTop="@+id/textView9"
+        android:ems="10"
+        android:hint="Manhattan"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/create_input_borough"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="19dp"
+        android:text="Address"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+    <EditText
+        android:id="@+id/create_input_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/create_input_borough"
+        android:layout_alignStart="@+id/create_input_borough"
+        android:layout_alignTop="@+id/textView10"
+        android:ems="10"
+        android:hint="123 45th St."
+        android:inputType="textPostalAddress" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView10"
+        android:layout_alignStart="@+id/textView10"
+        android:layout_below="@+id/create_input_address"
+        android:layout_marginTop="19dp"
+        android:text="Zipcode"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+    <EditText
+        android:id="@+id/create_input_zipcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/create_input_address"
+        android:layout_alignStart="@+id/create_input_address"
+        android:layout_alignTop="@+id/textView11"
+        android:ems="10"
+        android:hint="10001"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Property Type"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_marginTop="23dp"
+        android:layout_below="@+id/create_input_zipcode"
+        android:layout_alignLeft="@+id/textView11"
+        android:layout_alignStart="@+id/textView11" />
+
+    <Spinner
+        android:id="@+id/create_input_propertyType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/create_input_zipcode"
+        android:layout_alignRight="@+id/create_input_zipcode"
+        android:layout_alignTop="@+id/textView12"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
+        android:layout_toRightOf="@+id/textView12" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/create_input_date"
+        android:layout_alignStart="@+id/create_input_date"
+        android:layout_below="@+id/create_input_propertyType"
+        android:layout_marginTop="13dp"
+        android:text="Date" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView13"
+        android:layout_alignBottom="@+id/textView13"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/create_input_date"
+        android:layout_toRightOf="@+id/create_input_date"
+        android:text="Time" />
+
+    <EditText
+        android:id="@+id/create_input_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:inputType="date"
+        android:layout_below="@+id/textView13"
+        android:layout_alignLeft="@+id/textView12"
+        android:layout_alignStart="@+id/textView12"
+        android:layout_alignRight="@+id/report_add_button"
+        android:layout_alignEnd="@+id/report_add_button" />
+
+    <EditText
+        android:id="@+id/create_input_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/create_input_propertyType"
+        android:layout_alignLeft="@+id/textView15"
+        android:layout_alignRight="@+id/create_input_propertyType"
+        android:layout_alignStart="@+id/textView15"
+        android:layout_alignTop="@+id/create_input_date"
+        android:ems="10"
+        android:inputType="time" />
+
+
+</RelativeLayout>
