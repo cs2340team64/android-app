@@ -93,7 +93,7 @@ public class ReportCreateActivity extends Activity {
 
                 // hard code the coordinates for now
                 rep.setLatitude(40.7831);
-                rep.setLongitude(73.9712);
+                rep.setLongitude(-73.9712);
                 rep.setUnique_Key(reportListWrapper.generateNextUniqueKey());
 
                 // push to database

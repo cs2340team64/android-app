@@ -28,9 +28,9 @@ public class ReportListActivity extends Activity {
 
     ListView listView;
     ArrayAdapter<Report> adapter;
+
     ReportListWrapper reportListWrapper = ReportListWrapper.getInstance();
     LinearLayout filterPane;
-
     EditText fromDate;
     EditText toDate;
     Button filter;
@@ -45,22 +45,21 @@ public class ReportListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_list_screen);
 
+        // since this filter is used in 2 places (here and ReportMapActivity) it be converted to a Fragment, when time permits
         filterPane = (LinearLayout) findViewById(R.id.linearLayout);
         //filterPane.setVisibility(View.GONE);
-
         fromDate = (EditText) findViewById(R.id.fromDate);
         toDate = (EditText) findViewById(R.id.toDate);
         filter = (Button) findViewById(R.id.filter_button);
-
-        listView = (ListView) findViewById(R.id.list);
-        //adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reportListWrapper.getAllReports());
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         fromDate.setText(sdf.format(new Date(0, 0, 1)));
         toDate.setText(sdf.format(new Date()));
 
-        ArrayList<Report> initialList = reportListWrapper.filter(reportListWrapper.dateTimeCode(fromDate.getText().toString(), false),
-                reportListWrapper.dateTimeCode(toDate.getText().toString(), true));
+        listView = (ListView) findViewById(R.id.list);
+        //adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, reportListWrapper.getAllReports());
+
+        ArrayList<Report> initialList = reportListWrapper.filter(fromDate.getText().toString(), toDate.getText().toString());
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, initialList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,10 +76,7 @@ public class ReportListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 adapter.clear();
-                adapter.addAll(
-                        reportListWrapper.filter(reportListWrapper.dateTimeCode(fromDate.getText().toString(), false),
-                                reportListWrapper.dateTimeCode(toDate.getText().toString(), true))
-                );
+                adapter.addAll(reportListWrapper.filter(fromDate.getText().toString(), toDate.getText().toString()));
                 adapter.notifyDataSetChanged();
             }
         });

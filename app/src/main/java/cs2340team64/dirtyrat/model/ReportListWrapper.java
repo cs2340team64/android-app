@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -84,6 +85,10 @@ public class ReportListWrapper implements Serializable {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    public ArrayList<Report> filter(String fromDate, String toDate) {
+        return filter(dateTimeCode(fromDate, false), dateTimeCode(toDate, true));
     }
 
     /**
