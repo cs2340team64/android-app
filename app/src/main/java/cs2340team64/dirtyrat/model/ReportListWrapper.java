@@ -70,15 +70,16 @@ public class ReportListWrapper implements Serializable {
      * @return reportList
      */
 
-    public ArrayList<Report> getReports() {
+    public ArrayList<Report> getAllReports() {
         return new ArrayList<>(reportMap.values());
     }
 
     public ArrayList<Report> filter(long minDate, long maxDate) {
        // -20171022000000L, -20171023000000L returns 10/22/2017
+        Log.d("filter","Filtering with minDate=" + minDate + " and maxDate=" + maxDate);
         try {
             TreeMap copy = new TreeMap<>(reportMap);
-            return new ArrayList<>(copy.tailMap(maxDate).headMap(minDate).values());
+            return new ArrayList<>(copy.tailMap(maxDate, false).headMap(minDate, true).values());
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -90,7 +91,7 @@ public class ReportListWrapper implements Serializable {
      * @param report the report to add
      */
     public void add(Report report) {
-        long code = dateTimeCode(report);
+        long code = uniqueReportDateTimeCode(report);
         reportMap.put(code, report);
         Log.d("Logic", "report date: " + report.getCreated_Date() + " datetimecode: " + code);
     }
@@ -101,15 +102,39 @@ public class ReportListWrapper implements Serializable {
         }
     }
 
-    public Long dateTimeCode(Report report) {
+    public Long dateTimeCode(String date, boolean addOne) {
+        //Log.d("filter", date);
+        String[] split = date.split("/");
+        int month = Integer.valueOf(split[0]);
+        int day = Integer.valueOf(split[1]);
+        int year;
+        if (split[2].length() > 4) {
+            year = Integer.valueOf(split[2].substring(0, 4));
+        } else {
+            year = Integer.valueOf(split[2]);
+        }
+
+        // Fix this later to include the actual days per month and not just 31 days for every month
+        day = addOne ? ++day : day;
+        if (day > 31) {
+            day = 1;
+            ++month;
+            if (month > 12) {
+                month = 1;
+                ++year;
+            }
+        }
+
+        // multiply this result by 1,000,000, this allows up to 1,000,000 reports per day
+        long code = -1000000L * ((year * 10000) + (month * 100) + day);
+        //Log.d("filter", code + "");
+        return code;
+    }
+
+    public Long uniqueReportDateTimeCode(Report report) {
         try {
-            // 04/22/2016 12:00:00 AM
-            String[] split = report.getCreated_Date().split("/");
-            int month = Integer.valueOf(split[0]);
-            int day = Integer.valueOf(split[1]);
-            int year = Integer.valueOf(split[2].substring(0, 4));
-            // multiply this result by 1,000,000, this allows up to 1,000,000 reports per day
-            long code = -1000000L * ((year * 10000) + (month * 100) + day);
+
+            long code = dateTimeCode(report.getCreated_Date(), false);
 
             AtomicInteger entry = reportsPerDay.get(code);
             if (entry != null) {
