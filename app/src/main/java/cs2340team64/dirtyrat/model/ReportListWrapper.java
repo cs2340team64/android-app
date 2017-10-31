@@ -62,18 +62,14 @@ public class ReportListWrapper implements Serializable {
         currentReport = report;
     }
 
+    /**
+     * Gets the currently set report (used for ReportDetailActivity)
+     * @return the current Report
+     */
     public Report getCurrentReport() {
         return currentReport;
     }
 
-    /**
-     * Returns the ArrayList with reports
-     * @return reportList
-     */
-
-    public ArrayList<Report> getAllReports() {
-        return new ArrayList<>(reportMap.values());
-    }
 
     public ArrayList<Report> filter(long minDate, long maxDate) {
        // -20171022000000L, -20171023000000L returns 10/22/2017
@@ -87,6 +83,12 @@ public class ReportListWrapper implements Serializable {
         }
     }
 
+    /**
+     * Filters all the Reports by date
+     * @param fromDate minimum date to filter by
+     * @param toDate maximum date to filter by
+     * @return the filtered list of Reports
+     */
     public ArrayList<Report> filter(String fromDate, String toDate) {
         return filter(dateTimeCode(fromDate, false), dateTimeCode(toDate, true));
     }
@@ -101,13 +103,14 @@ public class ReportListWrapper implements Serializable {
         Log.d("Logic", "report date: " + report.getCreated_Date() + " datetimecode: " + code);
     }
 
-    public void printKeys() {
-        for (Long num : reportMap.keySet()) {
-            Log.d("treemap", num + "");
-        }
-    }
-
-    public Long dateTimeCode(String date, boolean addOne) {
+    /**
+     * Converts a String date to a long dateTimeCode. The last 6 digits of the dateTimeCode are unique
+     * identifiers for multiple reports on the same day (so there can be up to 999,999 reports per day
+     * @param date the date, as a String
+     * @param addOne adds one to the code if a report with the dateTimeCode already exists in the TreeMap
+     * @return the long dateTimeCode.
+     */
+    private Long dateTimeCode(String date, boolean addOne) {
         //Log.d("filter", date);
         String[] split = date.split("/");
         int month = Integer.valueOf(split[0]);
@@ -136,7 +139,7 @@ public class ReportListWrapper implements Serializable {
         return code;
     }
 
-    public Long uniqueReportDateTimeCode(Report report) {
+    private Long uniqueReportDateTimeCode(Report report) {
         try {
 
             long code = dateTimeCode(report.getCreated_Date(), false);

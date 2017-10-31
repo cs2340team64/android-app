@@ -74,6 +74,10 @@ public class ReportMapActivity extends FragmentActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * initializing code for the google map.
+     * @param googleMap the google map
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Map is ready to be used.
@@ -86,6 +90,10 @@ public class ReportMapActivity extends FragmentActivity implements OnMapReadyCal
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(NY, 11));
     }
 
+    /**
+     * Refreshes the google map display with new markers, after filtering by date.
+     * @param reportList the updated report list to show in the google map.
+     */
     public void refreshMap(ArrayList<Report> reportList) {
         map.clear();
         for (Report report : reportList) {
