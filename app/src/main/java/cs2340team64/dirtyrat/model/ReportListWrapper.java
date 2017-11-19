@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by diogo on 10/12/2017.
  */
-
 public class ReportListWrapper implements Serializable {
 
     private static ReportListWrapper instance;
@@ -71,7 +70,7 @@ public class ReportListWrapper implements Serializable {
     }
 
 
-    public ArrayList<Report> filter(long minDate, long maxDate) {
+    private ArrayList<Report> filter(long minDate, long maxDate) {
        // -20171022000000L, -20171023000000L returns 10/22/2017
         Log.d("filter","Filtering with minDate=" + minDate + " and maxDate=" + maxDate);
         try {
@@ -110,9 +109,12 @@ public class ReportListWrapper implements Serializable {
      * @param addOne adds one to the code if a report with the dateTimeCode already exists in the TreeMap
      * @return the long dateTimeCode.
      */
-    private Long dateTimeCode(String date, boolean addOne) {
+     public Long dateTimeCode(String date, boolean addOne) {
         //Log.d("filter", date);
         String[] split = date.split("/");
+        if (split.length != 3) {
+            return null;
+        }
         int month = Integer.valueOf(split[0]);
         int day = Integer.valueOf(split[1]);
         int year;
